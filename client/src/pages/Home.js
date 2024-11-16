@@ -38,21 +38,13 @@ const Home = () => {
 
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useCart();
-  const [loading, setLoading] = useState(true);  // Added loading state
 
-  // Fetch products from API
   const getProduct = async () => {
     try {
       const { data } = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-product/`);
-      if (Array.isArray(data?.products)) {
-        setProducts(data.products);
-      } else {
-        console.error("Products data is not an array:", data?.products);
-      }
-      setLoading(false);  // Set loading to false when data is fetched
+      setProducts(data?.products);
     } catch (error) {
       console.log(error);
-      setLoading(false);  // Set loading to false if there's an error
     }
   };
 
@@ -94,41 +86,37 @@ const Home = () => {
         />
       </h3>
       <div className="my-4">
-        {loading ? (
-          <div>Loading...</div>  // Show loading message while fetching data
-        ) : (
-          <Slider {...settings} className="mx-auto">
-            {products.map((p) => (
-              <div className="col" key={p._id}>
-                <div className="card custom-card mb-3" style={{ width: '300px', height: '450px' }}>
-                  <img
-                    src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                    className="card-img-top"
-                    alt={p.name}
-                    style={{ width: '100%', height: '60%' }}
-                  />
-                  <div
-                    className="card-body"
-                    style={{ height: '40%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                  >
-                    <div>
-                      <h5 className="card-title" style={{ color: 'black' }}>{p.name}</h5>
-                      <p className="card-text" style={{ color: 'black' }}>{p.description.substring(0, 30)}...</p>
-                      <p className="card-text" style={{ color: 'black' }}> ₹ {p.price}</p>
-                    </div>
-                    <button
-                      className="btn btn-sm btn-secondary"
-                      style={{ width: '100%', transition: 'transform 0.3s', transform: 'scale(1)' }}
-                      onClick={() => addToCart(p)}
-                    >
-                      <span role="img" aria-label="cart">🛒</span> Add to Cart
-                    </button>
+        <Slider {...settings} className="mx-auto">
+          {products.map((p) => (
+            <div className="col" key={p._id}>
+              <div className="card custom-card mb-3" style={{ width: '300px', height: '450px' }}>
+                <img
+                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                  className="card-img-top"
+                  alt={p.name}
+                  style={{ width: '100%', height: '60%' }}
+                />
+                <div
+                  className="card-body"
+                  style={{ height: '40%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                >
+                  <div>
+                    <h5 className="card-title" style={{ color: 'black' }}>{p.name}</h5>
+                    <p className="card-text" style={{ color: 'black' }}>{p.description.substring(0, 30)}...</p>
+                    <p className="card-text" style={{ color: 'black' }}> ₹ {p.price}</p>
                   </div>
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    style={{ width: '100%', transition: 'transform 0.3s', transform: 'scale(1)' }}
+                    onClick={() => addToCart(p)}
+                  >
+                    <span role="img" aria-label="cart">🛒</span> Add to Cart
+                  </button>
                 </div>
               </div>
-            ))}
-          </Slider>
-        )}
+            </div>
+          ))}
+        </Slider>
       </div>
     </Layout>
   );
